@@ -5,14 +5,19 @@ BASE_URL = os.environ.get('SNOW_BASE_URL')
 USER =  os.environ.get('SNOW_USER')
 PWD = os.environ.get('SNOW_PWD')
 
-url = f'{BASE_URL}/api/now/table/incident?sysparm_query=number%3DINC0010111&sysparm_limit=1'
+url = f'{BASE_URL}/api/now/table/incident'
+number='INC0010111'
 
+payload = {
+  'sysparm_query': f'number={number}',
+  'sysparm_limit': '1'
+}
 
 # Set proper headers
 headers = {"Content-Type":"application/json","Accept":"application/json"}
 
 # Do the HTTP request
-response = requests.get(url, auth=(USER, PWD), headers=headers)
+response = requests.get(url, auth=(USER, PWD), headers=headers, params=payload)
 
 # Check for HTTP codes other than 200
 if response.status_code != 200: 

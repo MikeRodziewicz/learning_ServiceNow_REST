@@ -1,46 +1,134 @@
 import os 
 import requests
 from abc import ABC, abstractclassmethod
-
-class Config():
-
-    BASE_URL = os.environ.get('SNOW_BASE_URL') or 'test1'
-    USER =  os.environ.get('SNOW_USER') or 'test2'
-    PWD = os.environ.get('SNOW_PWD') or 'test3'
-
-    @staticmethod
-    def init_app():
-        pass
+BASE_URL = os.environ.get('SNOW_BASE_URL')
 
 
-class PDIConfig(Config):
-    INCIDENT_SEARCH = 'INC0010111'
+# class Config:
+#     BASE_URL = None
+#     USER =  None
+#     PWD = None
+
+class DevConfig:
+    BASE_URL = os.environ.get('SNOW_BASE_DEV_URL')
+    USER =  os.environ.get('SNOW_DEV_USER')
+    PWD = os.environ.get('SNOW_DEV_PWD')
 
 
-# app = PDIConfig()
-# print(app.INCIDENT_SEARCH)
-# print(app.USER)
-
-class TypeOfRequest(ABC):
-
-    @abstractclassmethod
-    def provide_method(self) -> str:
-        pass
-
-
-class GetRequest(TypeOfRequest):
-
-    def provide_method(self):
-        return 'get'
+class TestConfig:
+    BASE_URL = os.environ.get('SNOW_BASE_TEST_URL')
+    USER =  os.environ.get('SNOW_TEST_USER')
+    PWD = os.environ.get('SNOW_TEST_PWD')
     
-class PostRequest(TypeOfRequest):
+class ProdConfig:
+    BASE_URL = os.environ.get('SNOW_BASE_PROD_URL')
+    USER =  os.environ.get('SNOW_PROD_USER')
+    PWD = os.environ.get('SNOW_PROD_PWD')
 
-    def provide_method(self):
-        return 'post'
+
+class PDIConfig:
+    BASE_URL = os.environ.get('SNOW_PDI_URL')
+    USER =  os.environ.get('SNOW_PDI_USER') or 'test'
+    PWD = os.environ.get('SNOW_PDI_PWD') 
 
 
-spam = GetRequest()
-print(spam.provide_method())
+
+config = {
+    'pdi': PDIConfig,
+    'dev': DevConfig,
+    'test': TestConfig,
+    'prod': ProdConfig,
+    'default': PDIConfig
+}
+
+# class Foo():
+
+
+
+
+# env = config['pdi']
+
+# print(env.USER)
+
+# class MakeConnection():
+
+#     def __init__(self, env) -> None:
+#         self.base_url = env.BASE_URL
+#         self.username = env.USER
+#         self.password = env.PWD
+
+#     def set_config(self, env):
+#         self.username = env.USER
+
+#     def foo(self):
+#         print(self.username)
+
+# MakeConnection().foo()
+
+# print(config['pdi'].BASE_URL)
+
+# def create_app(config):
+#     print(config.BASE_URL)
+
+
+# create_app('pdi')
+
+
+# class Config():
+
+#     BASE_URL = os.environ.get('SNOW_BASE_URL') or 'test1'
+#     USER =  os.environ.get('SNOW_USER') or 'test2'
+#     PWD = os.environ.get('SNOW_PWD') or 'test3'
+
+#     @staticmethod
+#     def init_app():
+#         pass
+
+
+
+
+# class DevConfig(Config):
+#     pass
+
+# class TestConfig(Config):
+#     pass
+
+# class ProdConfig(Config):
+#     pass
+
+# config = {
+#     'pdi': PDIConfig,
+#     'dev': DevConfig,
+#     'test': TestConfig,
+#     'prod': ProdConfig,
+#     'default': PDIConfig
+# }
+
+
+# # app = PDIConfig()
+# # print(app.INCIDENT_SEARCH)
+# # print(app.USER)
+
+# class TypeOfRequest(ABC):
+
+#     @abstractclassmethod
+#     def provide_method(self) -> str:
+#         pass
+
+
+# class GetRequest(TypeOfRequest):
+
+#     def provide_method(self):
+#         return 'get'
+    
+# class PostRequest(TypeOfRequest):
+
+#     def provide_method(self):
+#         return 'post'
+
+
+# spam = GetRequest()
+# print(spam.provide_method())
 
 
 # # Set the request parameters

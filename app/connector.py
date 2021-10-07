@@ -1,69 +1,46 @@
-
 import os
 import requests
+from dotenv import load_dotenv
 
-class DevConfig:
-    BASE_URL = os.environ.get('SNOW_BASE_DEV_URL')
-    USER =  os.environ.get('SNOW_DEV_USER')
-    PWD = os.environ.get('SNOW_DEV_PWD')
+load_dotenv()
 
 
-class TestConfig:
-    BASE_URL = os.environ.get('SNOW_BASE_TEST_URL')
-    USER =  os.environ.get('SNOW_TEST_USER')
-    PWD = os.environ.get('SNOW_TEST_PWD')
+class MakeSnowConnection():
+
+    def __init__(self, base_url, user, password) -> None:
+        self.baseUrl = base_url
+        self.username = user
+        self.password = password
+        self.payload = None
+        self.headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
+    def _make_connection(self, method, url, **kwargs):
+        
+        try: 
+            self.response = requests.request(method=method, url=url, headers=self.headers, data=self.payload, **kwargs)
+            self.response.raise_for_status()
+            self.response = self.response.json()
+            return self.response
+        except requests.exceptions.HTTPError as errh:
+            print(errh)
+
+    def get_single_incident(self, inc_number):
+        method = "GET"
+        sysparm_query = f"sysparm_query=number={inc_number}"
+        url = f"{self.baseUrl}/api/now/table/incident/{sysparm_query}"
+        print(url)
+        return self._make_connection(method, url)
 
 
-class ProdConfig:
-    BASE_URL = os.environ.get('SNOW_BASE_PROD_URL')
-    USER =  os.environ.get('SNOW_PROD_USER')
-    PWD = os.environ.get('SNOW_PROD_PWD')
+base_url = os.getenv('BASE_URL')
+snow_usr = os.getenv('SNOW_USR')
+snow_pwd = os.getenv('SNOW_PWD')
 
-
-class PDIConfig:
-    BASE_URL = os.environ.get('SNOW_PDI_URL')
-    USER =  os.environ.get('SNOW_PDI_USER') or 'test'
-    PWD = os.environ.get('SNOW_PDI_PWD') 
-
-config = {
-    'pdi': PDIConfig,
-    'dev': DevConfig,
-    'test': TestConfig,
-    'prod': ProdConfig,
-    'default': PDIConfig
-}   
-
-
-class Foo():
-
-    def __init__(self, env) -> None:
-        self.baseUrl = env.BASE_URL
-        self.username = env.USER
-        self.password = env.PWD
-
-    def __str__(self) -> str:
-        return f'this is the username: {self.username}, and this is the baseURL {self.baseUrl}'
-
-    def make_connection(self):
-        conn = requests.get(self.baseUrl, auth=(self.username, self.password)) #missing headers and body
-        data = conn.json()
-        return data
-
-
-def get_the_config():
-    env = os.environ.get('ENV')
-    return config[env]
-
-
-
-# payload = {
-#     'sysparm_query' : f'sysparm_query={sysparm_query}',
-#     'sysparm_limit' : f'sysparm_limit={sysparm_limit}',
-#     'sysparm_display_value' : f'sysparm_display_value={sysparm_display_value}',
-#     'sysparm_fields' : f'sysparm_fields={sysparm_fields}'
-# }
-
-
+spam = MakeSnowConnection(base_url, snow_usr, snow_pwd)
+print(spam.get_single_incident('INC0000060'))
 
 
 

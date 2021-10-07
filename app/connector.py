@@ -20,7 +20,7 @@ class MakeSnowConnection():
     def _make_connection(self, method, url, **kwargs):
         
         try: 
-            self.response = requests.request(method=method, url=url, headers=self.headers, data=self.payload, **kwargs)
+            self.response = requests.request(auth=(self.username, self.password), method=method, url=url, headers=self.headers, data=self.payload, **kwargs)
             self.response.raise_for_status()
             self.response = self.response.json()
             return self.response
@@ -29,9 +29,7 @@ class MakeSnowConnection():
 
     def get_single_incident(self, inc_number):
         method = "GET"
-        sysparm_query = f"sysparm_query=number={inc_number}"
-        url = f"{self.baseUrl}/api/now/table/incident/{sysparm_query}"
-        print(url)
+        url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc_number}"
         return self._make_connection(method, url)
 
 

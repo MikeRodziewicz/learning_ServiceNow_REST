@@ -1,9 +1,5 @@
-import os
-import requests
-import json
-from dotenv import load_dotenv
 
-load_dotenv()
+import requests
 
 
 class MakeSnowConnection():
@@ -27,12 +23,12 @@ class MakeSnowConnection():
         except requests.exceptions.HTTPError as errh:
             print(errh)
 
-    def get_single_incident(self, inc_number):
+    def get_single_incident(self, inc_number: str):
         method = "GET"
         url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc_number}"
         return self._make_connection(method, url)
 
-    def post_single_incident(self, body):
+    def post_single_incident(self, body: dict):
         method = "POST"
         self.payload = body
         url = f"{self.baseUrl}/api/now/table/incident"
@@ -40,16 +36,5 @@ class MakeSnowConnection():
 
 
 if __name__ == "__main__":
-    
-    base_url = os.getenv('BASE_URL')
-    snow_usr = os.getenv('SNOW_USR')
-    snow_pwd = os.getenv('SNOW_PWD')
-    body = {
-        "urgency": "1",
-        "impact": "3",
-        "short_description": "test description"
-        }
-
-    spam = MakeSnowConnection(base_url, snow_usr, snow_pwd)
-
-    print(spam.post_single_incident(body))
+    pass
+   

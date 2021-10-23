@@ -17,7 +17,6 @@ class MakeSnowConnection():
     def _make_connection(self, method, url, **kwargs): 
         try: 
             self.response = requests.request(auth=(self.username, self.password), method=method, url=url, headers=self.headers, json=self.payload, **kwargs)
-            self.response.raise_for_status()
             self.response = self.response.json()
             return self.response
         except requests.exceptions.HTTPError as errh:

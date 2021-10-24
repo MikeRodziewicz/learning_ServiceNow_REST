@@ -33,11 +33,15 @@ class MakeSnowConnection():
         url = f"{self.baseUrl}/api/now/table/incident"
         return self._make_connection(method, url)
 
-    def get_all_emails(self):
+    def get_all_emails(self, limit=1):
         method = "GET"
-        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit=5"
+        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit={limit}"
         return self._make_connection(method, url)
         
+    def get_single_email(self, sys_id):
+        method = "GET"
+        url = f"{self.baseUrl}/api/now/v1/email/{sys_id}"
+        return self._make_connection(method, url)
 
 
 if __name__ == "__main__":

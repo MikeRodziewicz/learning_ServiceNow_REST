@@ -21,8 +21,12 @@ if __name__ == "__main__":
     snow_usr = os.getenv('SNOW_USR')
     snow_pwd = os.getenv('SNOW_PWD')
     connection_obj = MakeSnowConnection(base_url, snow_usr, snow_pwd)
-    # print(connection_obj.get_all_emails(2))
-    print(connection_obj.get_single_email('026ba8f21b32301064fc43fddc4bcb4a'))
-    # main(1,connection_obj)
+    date_to_use = '2021-10-23 08:37:31'
+    data = {
+        'sysparm_limit': "1",
+        'sysparm_query': f'sys_created_on>={date_to_use}'
+    }
+    print(connection_obj.get_all_emails(data))
+
     
   

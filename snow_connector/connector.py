@@ -17,6 +17,8 @@ class MakeSnowConnection():
     def _make_connection(self, method, url, **kwargs): 
         try: 
             self.response = requests.request(auth=(self.username, self.password), method=method, url=url, headers=self.headers, json=self.payload, **kwargs)
+            print(self.response.url)
+            print(self.response)
             self.response = self.response.json()
             return self.response
         except requests.exceptions.HTTPError as errh:
@@ -33,12 +35,12 @@ class MakeSnowConnection():
         url = f"{self.baseUrl}/api/now/table/incident"
         return self._make_connection(method, url)
 
-    def get_all_emails(self, limit=1):
+    def get_all_emails(self, data):
         method = "GET"
-        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit={limit}"
+        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit={data['sysparm_limit']}&sysparm_query={data['sysparm_query']}"
         return self._make_connection(method, url)
         
-    def get_single_email(self, sys_id):
+    def get_single_email(self, sys_id:str):
         method = "GET"
         url = f"{self.baseUrl}/api/now/v1/email/{sys_id}"
         return self._make_connection(method, url)

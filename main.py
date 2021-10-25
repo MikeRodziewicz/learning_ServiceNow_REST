@@ -21,12 +21,15 @@ if __name__ == "__main__":
     snow_usr = os.getenv('SNOW_USR')
     snow_pwd = os.getenv('SNOW_PWD')
     connection_obj = MakeSnowConnection(base_url, snow_usr, snow_pwd)
-    date_to_use = '2021-10-23 08:37:31'
-    data = {
-        'sysparm_limit': "1",
-        'sysparm_query': f'sys_created_on>="2021-10-23 08:37:31"'
-    }
-    print(connection_obj.get_multiple_emails(sysparm_limit=1, sysparm_query='sys_created_on>="2021-10-25 08:37:31"'))
+    # date_to_use = '2021-10-23 08:37:31'
+    # data = {
+    #     'sysparm_limit': "1",
+    #     'sysparm_query': f'sys_created_on>="2021-10-23 08:37:31"'
+    # }
+    # print(connection_obj.get_multiple_emails(sysparm_limit=1, sysparm_query='sys_created_on>="2021-10-25 08:37:31"'))
+    response = connection_obj.get_single_incident("INC0010111")
+    # print(response['result'][0])
+    print(response.status_code)
 
     
   

@@ -1,4 +1,3 @@
-
 import requests
 
 
@@ -14,12 +13,15 @@ class MakeSnowConnection():
             'Accept': 'application/json',
         }
 
+    #TODO modify the response object into json?
+
     def _make_connection(self, method, url, **kwargs): 
         try: 
             self.response = requests.request(auth=(self.username, self.password), method=method, url=url, headers=self.headers, json=self.payload, **kwargs)
             print(self.response.url)
             print(self.response)
-            self.response = self.response.json()
+            print(type(self.response))
+            # self.response = self.response.json()
             return self.response
         except requests.exceptions.HTTPError as errh:
             print(errh)

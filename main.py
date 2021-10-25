@@ -24,9 +24,9 @@ if __name__ == "__main__":
     date_to_use = '2021-10-23 08:37:31'
     data = {
         'sysparm_limit': "1",
-        'sysparm_query': f'sys_created_on>={date_to_use}'
+        'sysparm_query': f'sys_created_on>="2021-10-23 08:37:31"'
     }
-    print(connection_obj.get_all_emails(data))
+    print(connection_obj.get_multiple_emails(sysparm_limit=1, sysparm_query='sys_created_on>="2021-10-25 08:37:31"'))
 
     
   

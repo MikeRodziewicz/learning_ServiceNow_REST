@@ -29,15 +29,20 @@ class MakeSnowConnection():
         url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc_number}"
         return self._make_connection(method, url)
 
+    def get_multiple_incident(self):
+        method = "GET"
+        url = f"{self.baseUrl}/api/now/table/incident"
+        return self._make_connection(method, url)
+
     def post_single_incident(self, body: dict):
         method = "POST"
         self.payload = body
         url = f"{self.baseUrl}/api/now/table/incident"
         return self._make_connection(method, url)
 
-    def get_all_emails(self, data):
+    def get_multiple_emails(self, sysparm_limit="1", sysparm_query=None):
         method = "GET"
-        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit={data['sysparm_limit']}&sysparm_query={data['sysparm_query']}"
+        url = f"{self.baseUrl}/api/now/table/sys_email?sysparm_limit={sysparm_limit}&sysparm_query={sysparm_query}"
         return self._make_connection(method, url)
         
     def get_single_email(self, sys_id:str):

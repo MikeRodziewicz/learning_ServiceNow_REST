@@ -27,9 +27,13 @@ if __name__ == "__main__":
     #     'sysparm_query': f'sys_created_on>="2021-10-23 08:37:31"'
     # }
     # print(connection_obj.get_multiple_emails(sysparm_limit=1, sysparm_query='sys_created_on>="2021-10-25 08:37:31"'))
-    response = connection_obj.get_single_incident("INC0010111")
+    response = connection_obj.get_single_incident("Banan")
     # print(response['result'][0])
     print(response.status_code)
+    print(response.request)
+    response = response.json()
+    print(response['result'])
+
 
     
   

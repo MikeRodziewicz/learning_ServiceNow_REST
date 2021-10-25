@@ -31,9 +31,9 @@ class MakeSnowConnection():
         url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc_number}"
         return self._make_connection(method, url)
 
-    def get_multiple_incident(self):
+    def get_multiple_incident(self, sysparm_limit="1", sysparm_query=None):
         method = "GET"
-        url = f"{self.baseUrl}/api/now/table/incident"
+        url = f"{self.baseUrl}/api/now/table/incident?sysparm_limit={sysparm_limit}&sysparm_query={sysparm_query}"
         return self._make_connection(method, url)
 
     def post_single_incident(self, body: dict):

@@ -32,6 +32,7 @@ class BasicTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         response = response.json()
         self.assertNotEqual(response['result'], [])
+        self.assertIn('INC0010111',response['result'][0]['number'])
 
     def test_get_single_inc_ERR(self):
         """test if non existing object is not found"""
@@ -39,4 +40,15 @@ class BasicTestCase(unittest.TestCase):
         response = response.json()
         self.assertEqual(response['result'], [])
         
+    def test_get_multiple_incidents(self):
+        """test fetching multiple incidents"""
+        response_one = self.connection.get_multiple_incident()
+        response_two = self.connection.get_multiple_incident(2)
+        self.assertEqual(response_one.status_code, 200)
+        self.assertEqual(response_two.status_code, 200)
+        response_one = response_one.json()
+        response_two = response_two.json()
+        self.assertTrue(len(response_one['result']) != 0)
+        self.assertTrue(len(response_two['result']) == 2)
+
 

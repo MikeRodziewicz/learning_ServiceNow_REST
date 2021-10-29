@@ -7,7 +7,8 @@ fake = Faker()
 def return_fake_inc_body() -> dict:
     body = {
         "impact": random.randint(1,5),
-        "description": fake.text()
+        # "description": fake.text(),
+        "description": 'Mike test',
     }
     return body
 

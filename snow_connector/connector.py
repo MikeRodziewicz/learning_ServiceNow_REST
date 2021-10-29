@@ -63,23 +63,43 @@ class MakeAsyncSnowConnection():
             'Accept': 'application/json',
         }
 
-    def _get_tasks(self, session):
+    def _get_tasks(self, session, how_many):
         tasks = []
         method = 'GET'
         url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number=INC0010111" 
-        for _ in range(5):
+        for _ in how_many:
             tasks.append(asyncio.create_task(session.request(method, url, auth=aiohttp.BasicAuth(self.username, self.password))))
         return tasks
 
-    async def _make_get_request(self):
+    async def _make_get_request(self, how_many):
         results = []
         async with aiohttp.ClientSession() as session: 
-            tasks = self._get_tasks(session)
+            tasks = self._get_tasks(session, how_many)
             responses = await asyncio.gather(*tasks)
             for response in responses:
                 results.append(await response.json())
         return results
 
+    def _post_tasks(self, session, how_many, method, url):
+        tasks = []    
+        for _ in range(how_many):
+            tasks.append(asyncio.create_task(session.request(method, url, auth=aiohttp.BasicAuth(self.username, self.password), data=self.payload, headers=self.headers)))
+        return tasks
+
+    async def _make_post_request(self, how_many, method, url):
+        results = []
+        async with aiohttp.ClientSession() as session: 
+            tasks = self._post_tasks(session, how_many, method, url)
+            responses = await asyncio.gather(*tasks)
+            for response in responses:
+                results.append(await response.json())
+        print(results) 
+
+    async def post_single_inc_async(self, body:dict, how_many):
+        method = "POST"
+        self.payload = body
+        url = f"{self.baseUrl}/api/now/table/incident"
+        await self._make_post_request(how_many, method, url)
 
 
 if __name__ == "__main__":

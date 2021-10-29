@@ -1,1 +1,1 @@
-from .connector import MakeSnowConnection
+from .connector import MakeSnowConnection, MakeAsyncSnowConnection

@@ -14,8 +14,6 @@ class MakeSnowConnection():
             'Accept': 'application/json',
         }
 
-    #TODO modify the response object into json?
-
     def _make_connection(self, method, url, **kwargs): 
         try: 
             self.response = requests.request(auth=(self.username, self.password), method=method, url=url, headers=self.headers, json=self.payload, **kwargs)
@@ -64,6 +62,23 @@ class MakeAsyncSnowConnection():
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
+
+    def _get_tasks(self, session):
+        tasks = []
+        method = 'GET'
+        url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number=INC0010111" 
+        for _ in range(5):
+            tasks.append(asyncio.create_task(session.request(method, url, auth=aiohttp.BasicAuth(self.username, self.password))))
+        return tasks
+
+    async def _make_get_request(self):
+        results = []
+        async with aiohttp.ClientSession() as session: 
+            tasks = self._get_tasks(session)
+            responses = await asyncio.gather(*tasks)
+            for response in responses:
+                results.append(await response.json())
+        return results
 
 
 

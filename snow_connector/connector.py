@@ -1,5 +1,6 @@
 import requests
-
+import asyncio
+import aiohttp
 
 class MakeSnowConnection():
 
@@ -51,6 +52,19 @@ class MakeSnowConnection():
         method = "GET"
         url = f"{self.baseUrl}/api/now/v1/email/{sys_id}"
         return self._make_connection(method, url)
+
+class MakeAsyncSnowConnection():
+
+    def __init__(self, base_url, user, password) -> None:
+        self.baseUrl = base_url
+        self.username = user
+        self.password = password
+        self.payload = None
+        self.headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        }
+
 
 
 if __name__ == "__main__":

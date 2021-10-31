@@ -13,5 +13,5 @@ if __name__ == "__main__":
     snow_pwd = os.getenv('SNOW_PWD')
     body = return_fake_inc_body()
     connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
-    asyncio.run(connection_obj.post_single_inc_async(body,3))
+    asyncio.run(connection_obj.post_single_inc_async(body,1))
 

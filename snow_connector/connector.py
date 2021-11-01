@@ -67,38 +67,24 @@ class MakeAsyncSnowConnection():
             'Accept': 'application/json',
         }
 
-    def _get_tasks(self, session, urls, method):
-        tasks = []
-        for url in urls:
-                tasks.append(asyncio.create_task(session.request(url=url, method=method, auth=aiohttp.BasicAuth(self.username, self.password), data=self.payload, headers=self.headers)))
-        return tasks
-
-    async def _make_connection(self, method, urls):
-        outcome = []
-        async with aiohttp.ClientSession() as session:
-            tasks = self._get_tasks(session, urls, method)
-            responses = await asyncio.ensure_future(asyncio.gather(*tasks, return_exceptions=True))
-            for response in responses:
-                outcome.append(await response.json())
-            return outcome
-
-    async def post_single_inc_async(self, body:dict, how_many):
-        method = "POST"
-        self.payload = json.dumps(body)
-        url = f"{self.baseUrl}/api/now/table/incident"
-        outcome = await self._make_connection(method, url, how_many)
-        return outcome
-
-
-    async def get_single_inc_async(self, inc_number):
-        how_many = len(inc_number)
+    async def get_incidents_async(self, incidents_list:list):
+        results = []
         method = "GET"
         urls = []
-        for inc in inc_number:
+        for inc in incidents_list:
             url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc}"
             urls.append(url)
-        outcome = await self._make_connection(method, urls)
-        return outcome
+        async with aiohttp.ClientSession(headers=self.headers, auth=aiohttp.BasicAuth(self.username, self.password)) as session:
+            tasks = [session.request(url=url, method=method) for url in urls]
+            responses = await asyncio.ensure_future(asyncio.gather(*tasks, return_exceptions=True))
+            for response in responses:
+                results.append(await response.json())
+            return results
+
+
+
+
+
 
 if __name__ == "__main__":
     load_dotenv()
@@ -108,10 +94,11 @@ if __name__ == "__main__":
     body = return_fake_inc_body()
     inc_numbers = ['INC0010058','INC0010057','INC0010059','INC0010060']
     connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
-    # outcome = asyncio.run(connection_obj.post_single_inc_async(body, how_many=1))
-    outcome = asyncio.run(connection_obj.get_single_inc_async(inc_numbers))
-    # print("this is the outcome I am looking for: ", outcome[0]['result']['number'])
-    print(outcome)
+    outcome = asyncio.run(connection_obj.get_incidents_async(inc_numbers))
+    # print(outcome[0]['result'][0]['number'])
+
+    for i in outcome: 
+        print (i['result'][0]['number'])
     
 
   

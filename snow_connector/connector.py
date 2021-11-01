@@ -66,10 +66,11 @@ class MakeAsyncSnowConnection():
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
-
+    
+    #TODO split into two funcs, one to get urls, other to make connection
     async def get_incidents_async(self, incidents_list:list):
-        results = []
         method = "GET"
+        results = []
         urls = []
         for inc in incidents_list:
             url = f"{self.baseUrl}/api/now/table/incident?sysparm_query=number={inc}"
@@ -81,9 +82,21 @@ class MakeAsyncSnowConnection():
                 results.append(await response.json())
             return results
 
-
-
-
+    async def post_multiple_incidents_async(self, body:list):
+        url = f"{self.baseUrl}/api/now/table/incident"
+        method = "POST"
+        results = []
+        async with aiohttp.ClientSession(headers=self.headers, auth=aiohttp.BasicAuth(self.username, self.password)) as session:
+            for item in body:
+                print(item)
+                tasks = [session.request(url=url, method=method, json=item)]
+                print(tasks)
+                responses = await asyncio.ensure_future(asyncio.gather(*tasks, return_exceptions=True))
+                print(responses)
+            for response in responses:
+                print(response)
+                results.append(await response.json())
+        return results
 
 
 if __name__ == "__main__":
@@ -91,14 +104,13 @@ if __name__ == "__main__":
     base_url = os.getenv('BASE_URL')
     snow_usr = os.getenv('SNOW_USR')
     snow_pwd = os.getenv('SNOW_PWD')
-    body = return_fake_inc_body()
-    inc_numbers = ['INC0010058','INC0010057','INC0010059','INC0010060']
+    # body = return_fake_inc_body()
+    # new_body = json.dumps(body)
+    body = [{"impact": 4, "description": "testing the proper test"}, {"impact": 3, "description": "I like bananas"}]
+    print(len(body))
+    # inc_numbers = ['INC0010058','INC0010057','INC0010059','INC0010060']
     connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
-    outcome = asyncio.run(connection_obj.get_incidents_async(inc_numbers))
-    # print(outcome[0]['result'][0]['number'])
-
-    for i in outcome: 
-        print (i['result'][0]['number'])
-    
+    outcome = asyncio.run(connection_obj.post_multiple_incidents_async(body))
+    print(outcome)
 
   

@@ -67,6 +67,43 @@ class MakeAsyncSnowConnection():
             'Accept': 'application/json',
         }
 
+    def _get_tasks(self, session, url, method, how_many=1):
+        tasks = []
+        for _ in range(how_many):
+            try:
+                tasks.append(asyncio.create_task(session.request(url=url, method=method, auth=aiohttp.BasicAuth(self.username, self.password), data=self.payload, headers=self.headers)))
+            except:
+                passs
+        return tasks
+
+    async def _make_connection(self, method, url, how_many):
+        outcome = []
+        async with aiohttp.ClientSession() as session:
+            tasks = self._get_tasks(session, url, method, how_many)
+            responses = await asyncio.ensure_future(asyncio.gather(*tasks))
+            for response in responses:
+                outcome.append(await response.json())
+            return outcome
+
+    async def post_single_inc_async(self, body:dict, how_many):
+        method = "POST"
+        self.payload = json.dumps(body)
+        url = f"{self.baseUrl}/api/now/table/incident"
+        outcome = await self._make_connection(method, url, how_many)
+        return outcome
+
+if __name__ == "__main__":
+    load_dotenv()
+    base_url = os.getenv('BASE_URL')
+    snow_usr = os.getenv('SNOW_USR')
+    snow_pwd = os.getenv('SNOW_PWD')
+    body = return_fake_inc_body()
+    connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
+    outcome = asyncio.run(connection_obj.post_single_inc_async(body, how_many=1))
+    print("this is the outcome I am looking for: ", outcome[0]['result']['number'])
+
+
+
     # def _get_tasks(self, session, how_many=2):
     #     tasks = []
     #     method = 'GET'
@@ -112,8 +149,8 @@ class MakeAsyncSnowConnection():
     #     return tasks
 
 
-    async def _get_tasks(self, session, method, url, how_many):
-        tasks = []
+    # async def _get_tasks(self, session, method, url, how_many):
+    #     tasks = []
         # method = 'POST'
         # self.payload = {
         #     "impact": 3,
@@ -122,38 +159,24 @@ class MakeAsyncSnowConnection():
         # }
         # url = f"{self.baseUrl}/api/now/table/incident" 
         # body = json.dumps(self.payload)
-        for _ in range(how_many):
-            try:
-                task = asyncio.ensure_future(asyncio.create_task(session.request(method, url, auth=aiohttp.BasicAuth(self.username, self.password), data=body, headers=self.headers)))
-                tasks.append(task)
-            except Exception as e:
-                print("this is the errror", e)
-        print(tasks)
-        return tasks
+        # for _ in range(how_many):
+        #     try:
+        #         task = asyncio.ensure_future(asyncio.create_task(session.request(method, url, auth=aiohttp.BasicAuth(self.username, self.password), data=body, headers=self.headers)))
+        #         tasks.append(task)
+        #     except Exception as e:
+        #         print("this is the errror", e)
+        # print(tasks)
+        # return tasks
 
 
-    async def _make_request(self, method, url, how_many):
-        results = []
-        async with aiohttp.ClientSession() as session: 
+    # async def _make_request(self, method, url, how_many):
+    #     results = []
+    #     async with aiohttp.ClientSession() as session: 
             # build_task = self._prepare_request(session, method, url)
-            tasks = await self._get_tasks(session, method, url, how_many)
-            responses = await asyncio.gather(*tasks)
-            for response in responses: 
-                results.append(response)
-            return results
+    #         tasks = await self._get_tasks(session, method, url, how_many)
+    #         responses = await asyncio.gather(*tasks)
+    #         for response in responses: 
+    #             results.append(response)
+    #         return results
     
-    async def post_single_inc_async(self, body:dict, how_many):
-        method = "POST"
-        self.payload = json.dumps(body)
-        print(self.payload)
-        url = f"{self.baseUrl}/api/now/table/incident"
-        await self._make_request(method, url, how_many)
-
-if __name__ == "__main__":
-    load_dotenv()
-    base_url = os.getenv('BASE_URL')
-    snow_usr = os.getenv('SNOW_USR')
-    snow_pwd = os.getenv('SNOW_PWD')
-    body = return_fake_inc_body()
-    connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
-    print(asyncio.run(connection_obj.post_single_inc_async(body, how_many=1)))
+  

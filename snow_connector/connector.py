@@ -87,16 +87,13 @@ class MakeAsyncSnowConnection():
         method = "POST"
         results = []
         async with aiohttp.ClientSession(headers=self.headers, auth=aiohttp.BasicAuth(self.username, self.password)) as session:
-            for item in body:
-                print(item)
-                tasks = [session.request(url=url, method=method, json=item)]
-                print(tasks)
-                responses = await asyncio.ensure_future(asyncio.gather(*tasks, return_exceptions=True))
-                print(responses)
+            tasks = [session.request(url=url, method=method, json=item)for item in body]
+            responses = await asyncio.ensure_future(asyncio.gather(*tasks, return_exceptions=True))
+            print("this is the response i want",len(responses))
             for response in responses:
                 print(response)
                 results.append(await response.json())
-        return results
+            return results
 
 
 if __name__ == "__main__":

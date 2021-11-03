@@ -2,7 +2,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from snow_connector import MakeSnowConnection, MakeAsyncSnowConnection
-from snow_connector.faker_filler import return_fake_inc_body
+from snow_connector.utils import return_fake_inc_body
 
 
 

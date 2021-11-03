@@ -67,7 +67,6 @@ class MakeAsyncSnowConnection():
             'Accept': 'application/json',
         }
     
-    #TODO split into two funcs, one to get urls, other to make connection
     async def get_incidents_async(self, incidents_list:list):
         method = "GET"
         results = []

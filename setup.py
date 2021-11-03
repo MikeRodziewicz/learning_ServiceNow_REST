@@ -9,7 +9,12 @@ setup(
     author_email='mike.python.testing@gmail.com',
     license='unlicense',
     packages=['snow_connector'],
-    install_requires=['python-dotenv','requests'],
+    install_requires=[
+                    'python-dotenv',
+                    'requests',
+                    'aiohttp',
+                    'Faker'
+                    ],
     zip_safe=False
 )
 

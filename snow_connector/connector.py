@@ -3,7 +3,7 @@ import os
 import asyncio
 import aiohttp
 from dotenv import load_dotenv
-from faker_filler import return_fake_inc_body
+from utils import return_fake_inc_body
 import json
 
 class MakeSnowConnection():
@@ -96,17 +96,5 @@ class MakeAsyncSnowConnection():
 
 
 if __name__ == "__main__":
-    load_dotenv()
-    base_url = os.getenv('BASE_URL')
-    snow_usr = os.getenv('SNOW_USR')
-    snow_pwd = os.getenv('SNOW_PWD')
-    # body = return_fake_inc_body()
-    # new_body = json.dumps(body)
-    body = [{"impact": 4, "description": "testing the proper test"}, {"impact": 3, "description": "I like bananas"}]
-    print(len(body))
-    # inc_numbers = ['INC0010058','INC0010057','INC0010059','INC0010060']
-    connection_obj = MakeAsyncSnowConnection(base_url, snow_usr, snow_pwd)
-    outcome = asyncio.run(connection_obj.post_multiple_incidents_async(body))
-    print(outcome)
-
+    pass
   

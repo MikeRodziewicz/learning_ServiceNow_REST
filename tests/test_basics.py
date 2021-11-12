@@ -1,6 +1,6 @@
 import os
 import unittest
-from snow_connector import MakeSnowConnection
+from snow_connector_pck.snow_connector import MakeSnowConnection
 from dotenv import load_dotenv
 
 class BasicTestCase(unittest.TestCase):

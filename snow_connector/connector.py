@@ -3,7 +3,7 @@ import os
 import asyncio
 import aiohttp
 from dotenv import load_dotenv
-from utils import return_fake_inc_body
+from .utils import return_fake_inc_body
 import json
 
 class MakeSnowConnection():
@@ -53,6 +53,11 @@ class MakeSnowConnection():
     def get_single_email(self, sys_id:str):
         method = "GET"
         url = f"{self.baseUrl}/api/now/v1/email/{sys_id}"
+        return self._make_connection(method, url)
+    
+    def get_single_user(self, sys_id:str):
+        method = "GET"
+        url = f"{self.baseUrl}/api/now/v1/sys_user/{sys_id}"
         return self._make_connection(method, url)
 
 class MakeAsyncSnowConnection():

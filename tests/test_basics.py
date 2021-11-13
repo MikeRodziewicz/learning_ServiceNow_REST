@@ -51,4 +51,22 @@ class BasicTestCase(unittest.TestCase):
         self.assertTrue(len(response_one['result']) != 0)
         self.assertTrue(len(response_two['result']) == 2)
 
+    def test_get_single_email(self):
+        """ test fetching single email object """ 
+        sys_id = ''
+        response = self.connection.get_single_email()
+        response = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(sys_id, response['result'][0]['sys_id'])
+        
+
+    def test_get_single_user(self):
+        """ test fetching single user """ 
+        sys_id = ''
+        response = self.connection.get_single_user()
+        response = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(sys_id, response['result'][0]['sys_id'])
+        self.assertEqual('Test', response['result'][0]['name'])
+        
 
